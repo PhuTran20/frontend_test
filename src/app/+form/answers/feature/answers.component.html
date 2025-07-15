@@ -1,0 +1,32 @@
+<div class="form-answers-container">
+    <div class="answers-wrapper">
+        <h1 class="page-title">Review My Answers</h1>
+
+        <div class="answers-list">
+            @for (question of questions(); track question.id; let i = $index) {
+            <div class="tile answer-tile">
+                <div class="question-number">Question {{ i + 1 }}</div>
+                <h3 class="question-title">{{ question.title }}</h3>
+
+                <div class="answer-content">
+                    <strong>Answer:</strong>
+                    <div class="answer-value">{{ formatAnswer(question) }}</div>
+                </div>
+            </div>
+            } @empty {
+            <div class="empty-state">
+                <div class="tile">
+                    <h3>No answers to review</h3>
+                    <p>Please go back and create some questions first.</p>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div class="action-buttons">
+            <button type="button" class="btn btn-secondary" (click)="backToBuilder()">
+                Back to Forms Builder
+            </button>
+        </div>
+    </div>
+</div>

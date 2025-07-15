@@ -1,0 +1,45 @@
+<div class="question-container">
+    @if (question) {
+    <div class="question-tile">
+        <h3 class="question-title">
+            {{ question.title }}
+            @if (question.required) {
+            <span class="required">*</span>
+            }
+        </h3>
+
+        <form [formGroup]="answerForm" class="answer-form">
+            @if (question.type === 'paragraph') {
+            <div>
+                <label for="paragraph-answer">Your Answer</label>
+                <textarea id="paragraph-answer" formControlName="paragraphAnswer" placeholder="Type your answer here..."
+                    (input)="onAnswerChange()" rows="4">
+                        </textarea>
+            </div>
+            }
+
+            @if (question.type === 'checkbox') {
+            <div class="checkbox-group">
+                <div formArrayName="checkboxAnswers">
+                    @for (option of question.options; track $index) {
+                    <div class="checkbox-item">
+                        <input type="checkbox" [id]="'option-' + $index" [formControlName]="$index"
+                            (change)="onAnswerChange()" />
+                        <label [for]="'option-' + $index">{{ option }}</label>
+                    </div>
+                    }
+                </div>
+
+                @if (question.hasOther) {
+                <div class="other-input-container">
+                    <label for="other-input">Other (please specify):</label>
+                    <input type="text" id="other-input" formControlName="otherValue" placeholder="Please specify..."
+                        (input)="onAnswerChange()" class="other-input" />
+                </div>
+                }
+            </div>
+            }
+        </form>
+    </div>
+    }
+</div>

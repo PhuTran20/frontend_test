@@ -1,0 +1,18 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-layout);
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-layout);
+  }
+  .inner-content {
+    max-width: 75rem;
+    width: 100%;
+    padding: 1rem;
+  }
+}

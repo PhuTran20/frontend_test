@@ -1,0 +1,98 @@
+<cds-modal [open]="isModalOpen()" size="lg" (overlaySelected)="onCancel()" [hasScrollingContent]="true">
+
+    <cds-modal-header>
+        <h3 cdsModalHeaderHeading>Add Question</h3>
+    </cds-modal-header>
+
+    <section cdsModalContent>
+        <form [formGroup]="questionForm" class="question-form">
+            <div class="form-field">
+                <label for="title">Question Title</label>
+                <input type="text" id="title" formControlName="title" placeholder="Enter your question"
+                    class="bx--text-input" [class.bx--text-input--invalid]="isFieldInvalid('title')">
+                @if (isFieldInvalid('title')) {
+                <div class="bx--form-requirement">
+                    Question title is required
+                </div>
+                }
+            </div>
+
+            <div class="form-field">
+                <label for="type">Answer Type</label>
+                <select id="type" formControlName="type" class="bx--select-input"
+                    [class.bx--select-input--invalid]="isFieldInvalid('type')">
+                    @for (option of answersTypeOptions(); track option.value) {
+                    <option [value]="option.value">{{option.label}}</option>
+                    }
+                </select>
+                @if (isFieldInvalid('type')) {
+                <div class="bx--form-requirement">
+                    Please select an answer type
+                </div>
+                }
+            </div>
+
+            <div class="form-field">
+                <div class="bx--form-item bx--checkbox-wrapper">
+                    <input type="checkbox" id="required-checkbox" formControlName="required" class="bx--checkbox">
+                    <label for="required-checkbox" class="bx--checkbox-label">
+                        <span class="bx--checkbox-label-text">Required Question</span>
+                    </label>
+                </div>
+            </div>
+
+            @if (questionForm.get('type')?.value === 'checkbox') {
+            <div class="options-section">
+                <h4>Answer Options</h4>
+                <div formArrayName="options">
+                    <div *ngFor="let option of optionsFormArray.controls; let i = index" class="option-item">
+                        <label [for]="'option-' + i">Option {{ i + 1 }}</label>
+                        <div class="option-controls">
+                            <input type="text" [id]="'option-' + i" [formControlName]="i"
+                                [placeholder]="'Enter option ' + (i + 1)" class="bx--text-input"
+                                [class.bx--text-input--invalid]="option.invalid && option.touched">
+                            @if (optionsFormArray.length > 1) {
+                            <button type="button" class="bx--btn bx--btn--danger--ghost bx--btn--sm"
+                                (click)="removeOption(i)">
+                                Remove
+                            </button>
+                            }
+                        </div>
+                        @if (option.invalid && option.touched) {
+                        <div class="bx--form-requirement">
+                            Option cannot be empty
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                @if (optionsFormArray.length < 5) { <button type="button" class="bx--btn bx--btn--secondary bx--btn--sm"
+                    (click)="addOption()">
+                    Add Option
+                    </button>
+                    }
+
+                    <div class="form-field">
+                        <div class="bx--form-item bx--checkbox-wrapper">
+                            <input type="checkbox" id="hasOther-checkbox" formControlName="hasOther"
+                                class="bx--checkbox">
+                            <label for="hasOther-checkbox" class="bx--checkbox-label">
+                                <span class="bx--checkbox-label-text">Include 'Other' option (allows users to enter
+                                    custom text)</span>
+                            </label>
+                        </div>
+                    </div>
+            </div>
+            }
+        </form>
+    </section>
+
+    <cds-modal-footer>
+        <button type="button" class="bx--btn bx--btn--secondary" (click)="onCancel()">
+            Cancel
+        </button>
+        <button type="button" class="bx--btn bx--btn--primary" (click)="onSave()" [disabled]="questionForm.invalid">
+            Add Question
+        </button>
+    </cds-modal-footer>
+</cds-modal>

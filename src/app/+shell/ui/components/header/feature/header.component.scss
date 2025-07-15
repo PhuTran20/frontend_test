@@ -1,0 +1,19 @@
+.app-header {
+  background-color: var(--bg-primary);
+  color: var(--text-on-primary);
+  padding: 1rem 2rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &__title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  @media (min-width: 768px) {
+    &__title {
+      font-size: 1.5rem;
+    }
+  }
+}
