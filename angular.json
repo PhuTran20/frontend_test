@@ -15,28 +15,74 @@
       "prefix": "app",
       "architect": {
         "build": {
+          "builder": "@angular-architects/native-federation:build",
+          "options": {
+            "ssr": false
+          },
+          "configurations": {
+            "production": {
+              "target": "dynamic-form-challenge:esbuild:production"
+            },
+            "development": {
+              "target": "dynamic-form-challenge:esbuild:development",
+              "dev": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-architects/native-federation:build",
+          "options": {
+            "target": "dynamic-form-challenge:serve-original:development",
+            "rebuildDelay": 0,
+            "dev": true,
+            "port": 0
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "public"
+              }
+            ],
+            "styles": ["src/styles.scss"],
+            "scripts": []
+          }
+        },
+        "esbuild": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/dynamic-form-challenge",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": ["zone.js", "es-module-shims"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "public"
               }
             ],
             "allowedCommonJsDependencies": ["flatpickr"],
             "styles": ["src/styles.scss"],
-
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "prerender": false
           },
           "configurations": {
             "production": {
@@ -62,35 +108,19 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve": {
+        "serve-original": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "dynamic-form-challenge:build:production"
+              "buildTarget": "dynamic-form-challenge:esbuild:production"
             },
             "development": {
-              "buildTarget": "dynamic-form-challenge:build:development"
+              "buildTarget": "dynamic-form-challenge:esbuild:development"
             }
           },
-          "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "defaultConfiguration": "development",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": ["src/styles.scss"],
-            "scripts": []
+            "port": 4200
           }
         }
       }

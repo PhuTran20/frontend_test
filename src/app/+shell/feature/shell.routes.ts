@@ -1,3 +1,4 @@
+import { loadRemoteModule } from '@angular-architects/native-federation';
 import { Routes } from '@angular/router';
 
 export const shellRoutes: Routes = [
@@ -10,6 +11,13 @@ export const shellRoutes: Routes = [
     path: 'form',
     canActivate: [],
     loadChildren: () => import('../../+form/form.routes'),
+  },
+  {
+    path: 'child',
+    loadComponent: () =>
+      loadRemoteModule('micro-frontend-child', './Component').then(
+        (m) => m.AppComponent
+      ),
   },
   {
     path: '404',
