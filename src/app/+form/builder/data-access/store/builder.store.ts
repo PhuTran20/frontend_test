@@ -71,32 +71,28 @@ export const BuilderStore = signalStore(
       const answers = store.answers();
       const errors: string[] = [];
 
-      questions.forEach((question) => {
-        if (question.required) {
-          const answer = answers.find((a) => a.questionId === question.id);
-          if (!answer) {
-            errors.push(`Question "${question.title}" is required`);
-          } else if (Array.isArray(answer.value) && answer.value.length === 0) {
+      for (const question of questions) {
+        if (!question.required) continue;
+
+        const answer = answers.find((a) => a.questionId === question.id);
+
+        !answer
+          ? errors.push(`Question "${question.title}" is required`)
+          : Array.isArray(answer.value)
+          ? answer.value.length === 0 &&
             errors.push(
               `Question "${question.title}" requires at least one selection`
-            );
-          } else if (
-            !Array.isArray(answer.value) &&
-            !answer.value.toString().trim()
-          ) {
+            )
+          : !answer.value.toString().trim() &&
             errors.push(`Question "${question.title}" cannot be empty`);
-          }
-        }
-      });
-
-      if (errors.length > 0) {
-        patchState(store, { error: errors.join(', ') });
-        return false;
       }
 
-      patchState(store, { error: null });
-      return true;
+      patchState(store, {
+        error: errors.length > 0 ? errors.join(', ') : null,
+      });
+      return errors.length === 0;
     },
+
     toggleModal: () => patchState(store, { isOpenModal: !store.isOpenModal() }),
   }))
 );

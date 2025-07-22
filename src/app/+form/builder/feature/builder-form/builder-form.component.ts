@@ -62,9 +62,9 @@ export class BuilderFormComponent implements OnInit {
 
   private initializeCheckboxes() {
     if (this.question?.type === 'checkbox' && this.question.options) {
-      this.question.options.forEach(() => {
+      for (let i = 0; i < this.question.options.length; i++) {
         this.checkboxAnswersArray.push(this.fb.control(false));
-      });
+      }
     }
   }
 
@@ -79,12 +79,12 @@ export class BuilderFormComponent implements OnInit {
       this.question.type === 'checkbox' &&
       Array.isArray(this.existingAnswer.value)
     ) {
-      this.existingAnswer.value.forEach((opt: string) => {
+      for (const opt of this.existingAnswer.value) {
         const idx = this.question!.options!.indexOf(opt);
         if (idx > -1) {
           this.checkboxAnswersArray.at(idx).setValue(true);
         }
-      });
+      }
 
       if (this.existingAnswer.otherValue) {
         this.answerForm.patchValue({
@@ -114,11 +114,14 @@ export class BuilderFormComponent implements OnInit {
     }
 
     const selectedOptions: string[] = [];
-    this.question.options?.forEach((option, idx) => {
-      if (this.checkboxAnswersArray.at(idx).value) {
-        selectedOptions.push(option);
+    if (this.question.options) {
+      for (let idx = 0; idx < this.question.options.length; idx++) {
+        const option = this.question.options[idx];
+        if (this.checkboxAnswersArray.at(idx).value) {
+          selectedOptions.push(option);
+        }
       }
-    });
+    }
 
     const answer: Answer = {
       questionId: this.question.id,
